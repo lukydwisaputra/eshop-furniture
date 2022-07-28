@@ -26,7 +26,7 @@ export default function App() {
 		let eshopLog = localStorage.getItem("eshopLog");
 		console.log(eshopLog)
 		if (eshopLog) {
-			Axios.post(`${API_URL}/auth/keep?id=${eshopLog}`)
+			Axios.post(`${API_URL}/auth/keep/${eshopLog}`)
 				.then((res) => {
 					if (res.data.idusers) {
 						localStorage.setItem("eshopLog", res.data.idusers);
