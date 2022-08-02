@@ -20,7 +20,6 @@ import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { logoutAction } from "../actions/userAction";
-import axios from "axios";
 import { API_URL } from "../helper";
 
 export default function NavbarComponent(props) {
@@ -37,9 +36,9 @@ export default function NavbarComponent(props) {
 
 	const [cartAmount, setCartAmount] = useState(0);
 
-	let { id, username, email, status, role, cart } = useSelector((state) => {
+	let { idusers, username, email, status, role, cart } = useSelector((state) => {
 		return {
-			id: state.userReducer.id,
+			idusers: state.userReducer.idusers,
 			username: state.userReducer.username,
 			status: state.userReducer.status,
 			// status: "verified",
@@ -107,7 +106,7 @@ export default function NavbarComponent(props) {
 							{pathname !== '/user/cart' && 
 								<MenuItem
 									className="lead text-muted fs-6"
-									onClick={() => navigate(`/user/cart?id=${id}`)}
+									onClick={() => navigate(`/user/cart?id=${idusers}`)}
 								>
 									Cart
 									<span className="d-flex float-end">
@@ -127,11 +126,11 @@ export default function NavbarComponent(props) {
 								<MenuItem
 									className="lead text-muted fs-6"
 									onClick={() => {
-										Axios.get(`http://localhost:2022/transaction?user_id=${eshopLog}`)
+										Axios.get(`http://localhost:2022/transaction?user_id=${idusers}`)
 											.then((res) => {
 												// console.log(res.data);
 												if (res.data.length > 0) {
-													navigate(`/transaction?user_id=${eshopLog}`);
+													navigate(`/transaction?user_id=${idusers}`);
 												} else if (res.data.length < 1) {
 													toast({
 														title: "NO TRANSACTION FOUND",
@@ -178,13 +177,13 @@ export default function NavbarComponent(props) {
 							<Badge
 								variant="outline"
 								className={
-									status === "verified"
+									status === "VERIFIED"
 										? "d-flex mx-3 text-success"
 										: "d-flex mx-3 text-red"
 								}
-								color={status === "verified" ? "teal" : "red"}
+								color={status === "VERIFIED" ? "teal" : "red"}
 							>
-								{status === "verified" ? `Welcome, ${username}!` : "verify your email"}
+								{status === "VERIFIED" ? `Welcome, ${username}!` : "verify your email"}
 							</Badge>
 
 							<MenuDivider />
@@ -250,7 +249,7 @@ export default function NavbarComponent(props) {
 								</span>
 							</li>
 						</ul>
-						{!username ? (
+						{!eshopLog ? (
 							<div className="d-flex">
 								<div className="btn-group">
 									<button

@@ -84,11 +84,14 @@ export default function ProductsPage() {
 
 		return (
 			<div className="col-12 col-sm-12 col-md-2 mt-3 mt-md-5 mt-sm-3 mb-3 ">
-				<Button className="float-md-end" colorScheme="blue" 
-				onClick={() => {
-					onOpen();
-					setProductInput({});
-				}}>
+				<Button
+					className="float-md-end"
+					colorScheme="blue"
+					onClick={() => {
+						onOpen();
+						setProductInput({});
+					}}
+				>
 					<AiOutlinePlus className="me-2" /> add
 				</Button>
 				<Modal
@@ -121,7 +124,7 @@ export default function ProductsPage() {
 									type={"text"}
 									placeholder="Product Name"
 									onChange={(input) => {
-										setProductInput({...productInput, name: input.target.value})
+										setProductInput({ ...productInput, name: input.target.value });
 										// console.log(productInput)
 									}}
 								/>
@@ -133,7 +136,7 @@ export default function ProductsPage() {
 									style={{ maxHeight: "100px" }}
 									placeholder="Product Description"
 									onChange={(input) => {
-										setProductInput({...productInput, description: input.target.value})
+										setProductInput({ ...productInput, description: input.target.value });
 										// console.log(productInput)
 									}}
 								/>
@@ -151,7 +154,7 @@ export default function ProductsPage() {
 								<select
 									className="form-control"
 									onChange={(input) => {
-										setProductInput({...productInput, brand: input.target.value})
+										setProductInput({ ...productInput, brand: input.target.value });
 										// console.log(productInput)
 									}}
 								>
@@ -173,7 +176,7 @@ export default function ProductsPage() {
 								<select
 									className="form-control"
 									onChange={(input) => {
-										setProductInput({...productInput, category: input.target.value})
+										setProductInput({ ...productInput, category: input.target.value });
 										// console.log(productInput)
 									}}
 								>
@@ -189,7 +192,7 @@ export default function ProductsPage() {
 									type="number"
 									placeholder="Product Price"
 									onChange={(input) => {
-										setProductInput({...productInput, price: input.target.value})
+										setProductInput({ ...productInput, price: input.target.value });
 										// console.log(productInput)
 									}}
 								/>
@@ -201,7 +204,7 @@ export default function ProductsPage() {
 									type="number"
 									placeholder="Product Price"
 									onChange={(input) => {
-										setProductInput({...productInput, stock: input.target.value})
+										setProductInput({ ...productInput, stock: input.target.value });
 										// console.log(productInput)
 									}}
 								/>
@@ -210,10 +213,10 @@ export default function ProductsPage() {
 							<FormControl mt={4}>
 								<FormLabel>IMAGES</FormLabel>
 								<Input
-									type={"text"}
-									placeholder="Image URL"
+									type={"file"}
+									placeholder="Image"
 									onChange={(input) => {
-										setProductInput({...productInput, images: input.target.value})
+										setProductInput({ ...productInput, images: input.target.files[0] });
 										// console.log(productInput)
 										setModalImage(input.target.value);
 									}}
@@ -226,16 +229,22 @@ export default function ProductsPage() {
 								colorScheme="blue"
 								mr={3}
 								onClick={() => {
-									let { name, brand, category, description, images, stock, price } = productInput;
-									Axios.post("http://localhost:3232/products", { name, brand, category, description, images, stock, price })
-									.then(() => {
-										getData();
-										printData();
-										setModalImage("");
-										onClose();
-										setProductInput({});
-									})
-									.catch((error) => console.log(error));
+									let { name, brand, category, description, stock, price } = productInput;
+									let formData = new FormData();
+									formData.append(
+										"data",
+										JSON.stringify({ name, brand, category, description, stock, price })
+									);
+									formData.append("images", productInput.images);
+									Axios.post("http://localhost:3232/products", formData)
+										.then(() => {
+											getData();
+											printData();
+											setModalImage("");
+											onClose();
+											setProductInput({});
+										})
+										.catch((error) => console.log(error));
 								}}
 							>
 								Submit
@@ -265,11 +274,19 @@ export default function ProductsPage() {
 			return (
 				<div keys={keys} className="container mt-3">
 					<div className="row">
-						<div  className="col-1 m-auto">
+						<div className="col-1 m-auto">
 							<h1 className="ms-3">{index + 1}</h1>
 						</div>
 						<div className="col-2">
-							<img src={`${value.images}`} alt="productName" width={"500px"} />
+							<img
+								src={
+									value.images.includes("http")
+										? value.images
+										: `http://localhost:3232${value.images}`
+								}
+								alt="productName"
+								width={"500px"}
+							/>
 						</div>
 						<div className="col-2 m-auto">
 							<h1 className="fw-regular">{value.name}</h1>

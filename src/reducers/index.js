@@ -1,6 +1,7 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { applyMiddleware, configureStore } from '@reduxjs/toolkit';
 import { userReducer } from './userReducer';
 import { productReducer } from './productReducer';
+import reduxThunk from 'redux-thunk'
 
 export const rootStore = configureStore({
     // untuk mengelompokan seluruh reducernya
@@ -9,4 +10,4 @@ export const rootStore = configureStore({
         userReducer,
         productReducer
     }
-})
+}, applyMiddleware(reduxThunk));

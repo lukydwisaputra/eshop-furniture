@@ -4,10 +4,10 @@ import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
-import { useToast } from "@chakra-ui/react";
+// import { useToast } from "@chakra-ui/react";
 import NavbarComponent from "../Components/Navbar";
-import { loginAction } from "../actions/userAction";
-import { useDispatch } from "react-redux";
+import { loginAction, loginMiddleware } from "../actions/userAction";
+import { useDispatch, useSelector } from "react-redux";
 import { API_URL } from "../helper";
 
 export default function LoginPage(props) {
@@ -31,27 +31,36 @@ export default function LoginPage(props) {
 	const [passwordType, setPasswordType] = useState("password");
 
 	const handlepasswordType = () => {
-		if (passwordType === "password") {
-			setPasswordType("text");
-		} else {
-			setPasswordType("password");
-		}
+		passwordType === "password" ? setPasswordType(prev => prev = "text") : setPasswordType(prev => prev = "password");
 	};
 
-	const toast = useToast();
-
-	const onLogin = () => {
-		Axios.post(`${API_URL}/auth/login`, {inputEmail, inputPassword})
-			.then((res) => {
-				console.log(res)
-				localStorage.setItem("eshopLog", res.data.idusers);
-				dispatch(loginAction(res.data));
-				// biar gabisa balik lagi ke page sebelumnya
+	let { idusers } = useSelector((state) => {
+		return {
+			idusers: state.userReducer.idusers
+		};
+	});
+	
+	const onLogin = async () => {
+		try {
+			await dispatch(loginMiddleware(inputEmail, inputPassword))
+			if (localStorage.getItem('eshopLog')) {
 				navigate("/", { replace: true });
-			})
-			.catch((err) => {
-				console.log(err);
-			});
+			}
+		} catch (error) {
+			console.log(error);
+		}
+		// Axios.post(`${API_URL}/auth/login`, {inputEmail, inputPassword})
+		// 	.then((res) => {
+		// 		console.log(res)
+		// 		localStorage.setItem("eshopLog", res.data.token);
+		// 		delete res.data.token;
+		// 		dispatch(loginAction(res.data));
+		// 		// biar gabisa balik lagi ke page sebelumnya
+		// 		navigate("/", { replace: true });
+		// 	})
+		// 	.catch((err) => {
+		// 		console.log(err);
+		// 	});
 	};
 
 	return (

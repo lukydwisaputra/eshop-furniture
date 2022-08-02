@@ -17,7 +17,7 @@ export const userReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case 'LOGIN_SUCCESS':
             // delete action.payload.password;
-            // console.log('userReducer', action.payload)
+            console.log('userReducer', action.payload)
             return { ...state, ...action.payload }
         case 'LOGOUT_SUCCESS':
             return INITIAL_STATE;

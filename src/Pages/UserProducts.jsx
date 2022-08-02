@@ -59,7 +59,9 @@ function UserProduct() {
 								borderBottom: "1px solid rgb(124,126,129, 0.3)",
 							}}
 							className="p-5"
-							src={value.images}
+							src={value.images.includes("http")
+							? value.images
+							: `http://localhost:3232${value.images}`}
 							alt={value.name + "-image"}
 						/>
 						<div className="col-12 mb-3 text-center mt-3">

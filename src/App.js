@@ -24,12 +24,17 @@ export default function App() {
 
 	const keepLogin = () => {
 		let eshopLog = localStorage.getItem("eshopLog");
-		console.log(eshopLog)
+		// console.log(eshopLog)
 		if (eshopLog) {
-			Axios.post(`${API_URL}/auth/keep/${eshopLog}`)
+			Axios.get(`${API_URL}/auth/keep`, {
+				headers: {
+					'Authorization': `Bearer ${eshopLog}`
+				}
+			})
 				.then((res) => {
-					if (res.data.idusers) {
-						localStorage.setItem("eshopLog", res.data.idusers);
+					if (res.data.token) {
+						localStorage.setItem("eshopLog", res.data.token);
+						delete res.data.token;
 						dispatch(loginAction(res.data));
 						setTimeout(() => {
 							setIsLoading(false);
