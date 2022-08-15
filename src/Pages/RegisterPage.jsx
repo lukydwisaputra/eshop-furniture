@@ -77,7 +77,7 @@ export default function RegisterPage(props) {
 							style={{ backgroundColor: "white", border: "20px solid #f5f5f5" }}
 						>
 							<h6 className="text-secondary fw-bold fs-sm-1 fs-md-2 my-2">START FOR FREE</h6>
-							<h2 className="fw-bold fs-3">Sign up to Zoho.</h2>
+							<h2 className="fw-bold fs-3">Sign up to EShop</h2>
 							<h6 className="pt-2 text-secondary text-start">
 								Already a member?
 								<span>
@@ -180,6 +180,7 @@ export default function RegisterPage(props) {
 									type="button"
 									className="btn text-secondary bg-light"
 									style={{ width: "100%" }}
+									onClick={() => window.open(`${API_URL}/auth/google`, '_blank').focus()}
 								>
 									<FcGoogle className="d-inline me-3" />
 									<span className="d-inline">Sign up with Google</span>
